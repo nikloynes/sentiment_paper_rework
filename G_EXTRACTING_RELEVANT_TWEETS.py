@@ -9,6 +9,7 @@
 #     
 # NL, 22/01/2020
 # NL, 23/01/2020 -- first alpha for testing through sbatch
+# NL, 28/01/2020 -- making a correction: new hampshire, not iowa!
 #     
 # SEQUENCE:
 #     1. data i/o
@@ -37,7 +38,8 @@ TWEETS = glob.glob(DATA_PATH+"*.json")
 
 
 # IO --> these are the users that had already been located
-ia_df = pd.read_csv(DATA_PATH + "previously_located_users/iowa.csv", dtype = {"user_id" : "str"})
+#ia_df = pd.read_csv(DATA_PATH + "previously_located_users/iowa.csv", dtype = {"user_id" : "str"})
+nh_df = pd.read_csv(DATA_PATH + "previously_located_users/new_hampshire.csv", dtype ={"user_id" : "str"})
 ma_df = pd.read_csv(DATA_PATH + "previously_located_users/massachussets.csv", dtype = {"user_id" : "str"})
 sc_df = pd.read_csv(DATA_PATH + "previously_located_users/south_carolina.csv", dtype = {"user_id" : "str"})
 
@@ -46,7 +48,7 @@ sc_df = pd.read_csv(DATA_PATH + "previously_located_users/south_carolina.csv", d
 
 
 # make the unique user ids for each state into their own objects
-user_ids = [list(ia_df['user_id']), list(sc_df['user_id']), list(ma_df['user_id'])]
+user_ids = [list(nh_df['user_id']), list(sc_df['user_id']), list(ma_df['user_id'])]
 
 
 # The time frame of interest is 3 weeks leading up to each of 3 primaries: **New Hampshire [February 9, 2016], South Carolina [February 27, 2016], Massachusetts [March 1, 2016]**. 
@@ -58,13 +60,13 @@ my_delta = datetime.timedelta(days = 1)
 
 # relevant date range: 
 # create an array of all pertinent days
-start_ia = datetime.datetime.strptime("2016-01-19", "%Y-%m-%d")
-end_ia = datetime.datetime.strptime("2016-02-09", "%Y-%m-%d")
+start_nh = datetime.datetime.strptime("2016-01-19", "%Y-%m-%d")
+end_nh = datetime.datetime.strptime("2016-02-09", "%Y-%m-%d")
 start_sc = datetime.datetime.strptime("2016-02-06", "%Y-%m-%d")
 end_sc = datetime.datetime.strptime("2016-02-27", "%Y-%m-%d")
 start_ma = datetime.datetime.strptime("2016-02-09", "%Y-%m-%d")
 end_ma = datetime.datetime.strptime("2016-03-01", "%Y-%m-%d")
-date_range_ia = [start_ia + datetime.timedelta(days=x) for x in range(0, (end_ia-start_ia).days)]
+date_range_nh = [start_nh + datetime.timedelta(days=x) for x in range(0, (end_nh-start_nh).days)]
 date_range_sc = [start_sc + datetime.timedelta(days=x) for x in range(0, (end_sc-start_sc).days)]
 date_range_ma = [start_ma + datetime.timedelta(days=x) for x in range(0, (end_ma-start_ma).days)]
 
@@ -74,7 +76,7 @@ date_range_ma = [start_ma + datetime.timedelta(days=x) for x in range(0, (end_ma
 
 # dates strings turns the dates into the right format for extracting the right collection files.
 
-all_state_dates = [date_range_ia, date_range_sc, date_range_ma]
+all_state_dates = [date_range_nh, date_range_sc, date_range_ma]
 all_state_date_strings = [[],[],[]]
 
 for i,element in enumerate(all_state_dates):
@@ -120,7 +122,7 @@ def process_file(path, output_path, user_ids_list):
 
 
 # LOOP through the states, then the files
-output_filepaths = [DATA_PATH+'located_users_tweets/iowa_tweets.json',
+output_filepaths = [DATA_PATH+'located_users_tweets/new_hampshire_tweets.json',
                     DATA_PATH+'located_users_tweets/southcarolina_tweets.json',
                     DATA_PATH+'located_users_tweets/massachussets_tweets.json']
 
