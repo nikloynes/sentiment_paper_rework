@@ -84,6 +84,8 @@ for(i in 1:length(TWEETS)){
                                n_tweets = nrow(pos1_df),
                                n_hillary = sum(pos1_df$hillary_mention),
                                n_bernie = sum(pos1_df$bernie_mention))
+      
+      user_tweet_overview_df <- rbind(user_tweet_overview_df, newline_df)
     
   }
   
