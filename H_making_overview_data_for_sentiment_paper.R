@@ -9,10 +9,23 @@ library(dplyr)
 library(ggplot2)
 library(jsonlite)
 
-LOCATED_USERS <- list.files("~/Desktop/sentiment_paper_repo/data/previously_located_users", full.names = T, pattern = ".csv")
-TWEETS <- list.files("~/Desktop/sentiment_paper_repo/data", full.names = T, pattern = ".json")
-PABLOSCORES <- list.files("~/Desktop/sentiment_paper_repo/data/pablo_scores", full.names = T, pattern = ".csv")
-STATES <- c("Iowa", "Massachussets", "South Carolina")
+# iMac
+# LOCATED_USERS <- list.files("~/Desktop/sentiment_paper_repo/data/previously_located_users", full.names = T, pattern = ".csv")
+# TWEETS <- list.files("~/Desktop/sentiment_paper_repo/data", full.names = T, pattern = ".json")
+# PABLOSCORES <- list.files("~/Desktop/sentiment_paper_repo/data/pablo_scores", full.names = T, pattern = ".csv")
+
+# MacBook
+# LOCATED_USERS <- list.files("~/Desktop/Sentiment Paper/REDO_REPO/data/previously_located_users", full.names = T, pattern = ".csv")
+# TWEETS <- list.files("~/Desktop/Sentiment Paper/REDO_REPO/data", full.names = T, pattern = ".json")
+# PABLOSCORES <- list.files("~/Desktop/Sentiment Paper/REDO_REPO/data/pablo_scores", full.names = T, pattern = ".csv")
+
+# HPC
+LOCATED_USERS <- list.files("/scratch/nl1676/olympus_local/sentiment_paper_relevant_tweets/previously_located_users", full.names = T, pattern = ".csv")
+TWEETS <- list.files("/scratch/nl1676/olympus_local/sentiment_paper_relevant_tweets/located_users_tweets", full.names = T, pattern = ".json")
+PABLOSCORES <- list.files("/scratch/olympus/projects/dem_debate_1/pablo_scores", full.names = T, pattern = ".csv")
+DATA_OUT <- "/scratch/nl1676/olympus_local/sentiment_paper_relevant_tweets/user_tweet_overviews/"
+
+STATES <- c("massachussets", "new_hampshire", "south_carolina")
 
 pablo_cutoffs <-  c(-0.3396343, 0.8026926)
 
@@ -63,15 +76,18 @@ for(i in 1:length(TWEETS)){
   for(j in 1:length(unique(tweets_df$user_id))){
     pos1_df <- tweets_df %>% 
       filter(user_id == unique(tweets_df$user_id)[j])
-      newline_df <- data.frame(user_id = unique(tweets_df$user_id)[i],
+      newline_df <- data.frame(user_id = unique(tweets_df$user_id)[j],
                                municipality = pos1_df$municipality[1],
                                admin = pos1_df$admin[1],
                                county = pos1_df$country[1],
                                ideology_bin = pos1_df$ideology_bin[1],
                                n_tweets = nrow(pos1_df),
                                n_hillary = sum(pos1_df$hillary_mention),
-                               n_bernie = sum(pos1_df$))
+                               n_bernie = sum(pos1_df$bernie_mention))
     
   }
+  
+  # write out 
+  write.csv(user_tweet_overview_df, paste0(DATA_OUT, STATES[i], "_overview.csv"))
   
 }
